@@ -1091,6 +1091,18 @@ struct ast_sip_contact *ast_sip_location_retrieve_contact_from_aor_list(const ch
  */
 struct ao2_container *ast_sip_location_retrieve_contacts_from_aor_list(const char *aor_list);
 
+//TODO markup change
+/*!
+ * \brief Retrieve the first bound contact matching contact_uri AND the AOR chosen from a list of AORs
+ *
+ * \param aor_list A comma-separated list of AOR names
+ * \param contact_uri the uri of the contact ( must match exactly with re registered uri )
+ * \param aor The AOR of the matched contact
+ * \param contact The matched contact
+ */
+ void ast_sip_location_retrieve_specific_contact_and_aor_from_list(const char *aor_list, const char *contact_uri, struct ast_sip_aor **aor,
+	struct ast_sip_contact **contact);
+
 /*!
  * \brief Retrieve the first bound contact AND the AOR chosen from a list of AORs
  *

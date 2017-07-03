@@ -1720,9 +1720,19 @@ struct ast_sip_session *ast_sip_session_create_outgoing(struct ast_sip_endpoint 
 
 	/* If no location has been provided use the AOR list from the endpoint itself */
 	if (location || !contact) {
-		location = S_OR(location, endpoint->aors);
 
-		ast_sip_location_retrieve_contact_and_aor_from_list(location, &found_aor, &found_contact);
+		if( location ){
+			/* 
+			If a contact_uri, here the location variable, was provided
+			e.g. user called dial like this:  Dial(PJSIP/${endpoint}/${contact_uri})
+			then we try to find the contact matching the uri
+			*/
+			ast_sip_location_retrieve_specific_contact_and_aor_from_list(endpoint->aors, location, &found_aor, &found_contact);
+		} else {
+			/* No contact uri was provided: Dial the first contact associated to endpoint aor */
+			ast_sip_location_retrieve_contact_and_aor_from_list(endpoint->aors, &found_aor, &found_contact);
+		}
+
 		if (!found_contact || ast_strlen_zero(found_contact->uri)) {
 			uri = location;
 		} else {

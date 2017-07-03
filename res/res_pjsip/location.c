@@ -226,11 +226,27 @@ struct ao2_container *ast_sip_location_retrieve_aor_contacts(const struct ast_si
 	return contacts;
 }
 
-void ast_sip_location_retrieve_contact_and_aor_from_list(const char *aor_list, struct ast_sip_aor **aor,
-	struct ast_sip_contact **contact)
+static int match_contact_by_uri(void *obj, void *arg, int flags)
+{
+	struct ast_sip_contact *contact = obj;
+	char *contact_uri_to_match = arg;
+
+	if (ast_strings_match(contact->uri, "=", contact_uri_to_match)) {
+		return CMP_MATCH | CMP_STOP;
+	}
+
+	return 0;
+
+}
+
+void ast_sip_location_retrieve_specific_contact_and_aor_from_list(const char *aor_list, const char *contact_uri, struct ast_sip_aor **aor, 
+struct ast_sip_contact **contact)
 {
 	char *aor_name;
 	char *rest;
+	//struct ast_sip_contact *contact_i;
+	struct ao2_container *contacts;
+	//struct ao2_iterator it_contacts;
 
 	/* If the location is still empty we have nowhere to go */
 	if (ast_strlen_zero(aor_list) || !(rest = ast_strdupa(aor_list))) {
@@ -242,20 +258,40 @@ void ast_sip_location_retrieve_contact_and_aor_from_list(const char *aor_list, s
 	*contact = NULL;
 
 	while ((aor_name = ast_strip(strsep(&rest, ",")))) {
+
 		*aor = ast_sip_location_retrieve_aor(aor_name);
 
-		if (!(*aor)) {
+		if (!(*aor)) 
 			continue;
+
+
+		contacts = ast_sip_location_retrieve_aor_contacts(*aor);
+		if (contacts && ao2_container_count(contacts))
+		{
+			if( !contact_uri )
+			{
+				/* Get the first AOR contact in the container. */
+				*contact = ao2_callback(contacts, 0, NULL, NULL);
+			} else {
+				/* Get the AOR contact matching the provider contact_uri */
+				*contact = ao2_callback(contacts, 0, match_contact_by_uri, contact_uri);
+			}
 		}
-		*contact = ast_sip_location_retrieve_first_aor_contact(*aor);
+		ao2_cleanup(contacts);
+
 		/* If a valid contact is available use its URI for dialing */
-		if (*contact) {
+		if (*contact)
 			break;
-		}
 
 		ao2_ref(*aor, -1);
 		*aor = NULL;
 	}
+}
+
+void ast_sip_location_retrieve_contact_and_aor_from_list(const char *aor_list, struct ast_sip_aor **aor,
+														 struct ast_sip_contact **contact)
+{
+	ast_sip_location_retrieve_specific_contact_and_aor_from_list(aor_list, NULL, aor, contact);
 }
 
 struct ast_sip_contact *ast_sip_location_retrieve_contact_from_aor_list(const char *aor_list)
