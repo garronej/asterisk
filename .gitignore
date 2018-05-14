@@ -16,8 +16,10 @@
 *.so
 *.exports
 *.moduleinfo
-*.makeopts
-*.makedeps
+.*.makeopts
+.makeopts
+.*.makedeps
+.makedeps
 .lastclean
 aclocal.m4
 autom4te.cache
@@ -34,4 +36,8 @@ menuselect-tree
 latex
 doxygen.log
 out/
+working_directory
 
+compile
+depcomp
+ltmain.sh
