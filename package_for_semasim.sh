@@ -60,7 +60,8 @@ cd $ROOT_DIRECTORY
         --with-pjproject-bundled \
         --with-speex=$WORKING_DIRECTORY/speex \
         --with-speexdsp=$WORKING_DIRECTORY/speexdsp \
-        --prefix=$AST_INSTALL_PATH
+        --prefix=$AST_INSTALL_PATH \
+        --runstatedir=/var/run/semasim
 
 make
 
