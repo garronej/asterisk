@@ -37,7 +37,3 @@ latex
 doxygen.log
 out/
 working_directory
-
-compile
-depcomp
-ltmain.sh

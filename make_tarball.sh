@@ -7,8 +7,10 @@ rm -rf $WORKING_DIRECTORY && mkdir $WORKING_DIRECTORY
 
 function build_speex(){
 
-    SRC_DIR=$WORKING_DIRECTORY/$1_src
+    SRC_DIR=/tmp/$1
     INST_DIR=$WORKING_DIRECTORY/$1
+
+    rm -rf $SRC_DIR
 
     git clone https://github.com/garronej/$1 $SRC_DIR
 
@@ -62,8 +64,6 @@ make
 mkdir $AST_INSTALL_PATH
 
 make install
-
-cp -r contrib $WORKING_DIRECTORY
 
 tar -czf $ROOT_DIRECTORY/asterisk_$(uname -m).tar.gz -C $WORKING_DIRECTORY .
 
