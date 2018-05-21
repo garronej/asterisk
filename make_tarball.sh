@@ -39,7 +39,9 @@ sudo apt-get install libtool
 build_speex speexdsp
 build_speex speex
 
-sudo apt-get install uuid-dev libjansson-dev libxml2-dev libsqlite3-dev
+sudo apt-get install uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev 
+
+#libcurl4-openssl-dev
 
 # Pour menuselect
 sudo apt-get install libncurses5-dev
