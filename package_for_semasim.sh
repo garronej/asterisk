@@ -52,7 +52,7 @@ sudo apt-get install libsrtp0-dev
 # Pour res_config_sqlite
 #sudo apt-get install libsqlite0-dev
 
-AST_INSTALL_PATH=$WORKING_DIRECTORY/asterisk
+AST_INSTALL_PATH=/usr/share/asterisk_semasim
 
 cd $ROOT_DIRECTORY
 
@@ -60,14 +60,17 @@ cd $ROOT_DIRECTORY
         --with-pjproject-bundled \
         --with-speex=$WORKING_DIRECTORY/speex \
         --with-speexdsp=$WORKING_DIRECTORY/speexdsp \
-        --prefix=$AST_INSTALL_PATH \
-        --runstatedir=/var/run/semasim
+        --prefix=$AST_INSTALL_PATH
 
 make
+
+rm -rf $AST_INSTALL_PATH
 
 mkdir $AST_INSTALL_PATH
 
 make install
+
+mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
 
 tar -czf $ROOT_DIRECTORY/asterisk_$(uname -m).tar.gz -C $WORKING_DIRECTORY .
 
