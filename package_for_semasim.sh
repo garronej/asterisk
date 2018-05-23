@@ -2,7 +2,7 @@
 
 # Need to be run on debian jessie!
 # gcc-4.9 need to be installed ( apt-get install )
-# Be sure that gcc is as simling to gcc-4.9
+# Be sure that gcc is as simlink to gcc-4.9
 
 ROOT_DIRECTORY=$(pwd)
 WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
