@@ -37,3 +37,4 @@ latex
 doxygen.log
 out/
 /working_directory
+/.lastclean
