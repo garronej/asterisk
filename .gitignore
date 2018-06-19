@@ -36,4 +36,4 @@ menuselect-tree
 latex
 doxygen.log
 out/
-working_directory
+/working_directory
