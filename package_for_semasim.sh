@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Need to be run on debian jessie!
+# Install pkg-config
 # gcc-4.9 need to be installed ( apt-get install )
 # Be sure that gcc is as simlink to gcc-4.9
 # Make sure $AST_INSTALL_PATH does not exsist.
