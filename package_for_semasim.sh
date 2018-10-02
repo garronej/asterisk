@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Need to be run on debian jessie!
-# Install pkg-config
 # gcc-4.9 need to be installed ( apt-get install )
 # Be sure that gcc is as simlink to gcc-4.9
 # Make sure $AST_INSTALL_PATH does not exsist.
@@ -43,7 +42,7 @@ function build_speex(){
 
 apt-get update
 
-apt-get install -y build-essential autoconf libtool
+apt-get install -y build-essential autoconf libtool pkg-config
 
 build_speex speexdsp
 build_speex speex
