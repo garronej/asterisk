@@ -44,10 +44,8 @@ apt-get install -y build-essential autoconf libtool pkg-config libncurses5-dev
 build_speex speexdsp
 build_speex speex
 
-
-
-# Packages that need to be installed on the client.
-# [ package needed to build ] -> [ package needed to run ]
+# Packages that will also need to be installed on the target host.
+# [ dev package needed to build ] -> [ assosiated package needed to run ]
 #
 # uuid-dev -> libuuid1
 # libjansson4-dev -> libjansson4
