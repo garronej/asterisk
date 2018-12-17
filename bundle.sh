@@ -55,7 +55,7 @@ build_speex speex
 # libsrtp0-dev -> libsrtp0 
 # libssl-dev -> (stretch and newer) libssl1.0.2, (jessie) libssl1.0.0 (from jessie backport)
 apt-get install -y uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev libsrtp0-dev
-apt-get install -y libssl-dev -t jessie-backports
+apt-get install -y --force-yes libssl-dev -t jessie-backports
 
 cd $ROOT_DIRECTORY
 
