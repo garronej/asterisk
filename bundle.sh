@@ -53,9 +53,8 @@ build_speex speex
 # libsqlite3-dev -> libsqlite3-0
 # unixodbc-dev -> unixodbc
 # libsrtp0-dev -> libsrtp0 
-# libssl-dev -> (stretch and newer) libssl1.0.2, (jessie) libssl1.0.0 (from jessie backport)
-apt-get install -y uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev libsrtp0-dev
-apt-get install -y --force-yes libssl-dev -t jessie-backports
+# libssl-dev -> NOTHING ( libssl1.0.0 bundled )
+apt-get install -y uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev libsrtp0-dev libssl-dev
 
 cd $ROOT_DIRECTORY
 
@@ -74,6 +73,8 @@ mkdir $AST_INSTALL_PATH
 make install
 
 mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
+
+cp -p $(dpkg -L libssl1.0.0 | grep libssl.so.1.0.0) $(dpkg -L libssl1.0.0 | grep libcrypto.so.1.0.0) $WORKING_DIRECTORY/asterisk/lib/
 
 tar -czf $ROOT_DIRECTORY/docs/asterisk_$(uname -m).tar.gz -C $WORKING_DIRECTORY .
 

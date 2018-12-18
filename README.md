@@ -16,7 +16,6 @@ It is the version of asterisk bundled with Semasim.
   Be sure that gcc is as simlink to gcc-4.9
 * Make sure ``$AST_INSTALL_PATH`` does not exsist.  
   ( see in bundle.sh what is the value the shell variable )
-* Enable jessie-backports repos ( https://backports.debian.org/Instructions/ ) and ``apt-get update``
 
 ### Build and bundle
 
