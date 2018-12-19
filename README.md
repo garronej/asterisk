@@ -31,7 +31,11 @@ current architecture it is beeing compiled against ( ``uname -m`` )
 ### Publish
 
 Simply add, the tarball to the repo and commit.
-
+Do not commit modification to ``./menuselect.makeopts``
+```bash
+git checkout menuselect.makeopts
+git add --force docs/asterisk_$(uname -m).tar.gz
+```
 
 ## Usage
 
