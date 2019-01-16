@@ -5,6 +5,11 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+if [[ -z "${PUTASSET_TOKEN}" ]]; then
+    echo "PUTASSET_TOKEN environement variable is not defined, aborting"
+    exit 1
+fi
+
 ROOT_DIRECTORY=$(pwd)
 WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
 AST_INSTALL_PATH=/usr/share/asterisk_semasim
@@ -76,7 +81,42 @@ mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
 
 cp -p $(dpkg -L libssl1.0.0 | grep libssl.so.1.0.0) $(dpkg -L libssl1.0.0 | grep libcrypto.so.1.0.0) $WORKING_DIRECTORY/asterisk/lib/
 
-tar -czf $ROOT_DIRECTORY/docs/asterisk_$(uname -m).tar.gz -C $WORKING_DIRECTORY .
+TARBALL_FILE_PATH=$ROOT_DIRECTORY/asterisk_$(uname -m).tar.gz
+
+tar -czf $TARBALL_FILE_PATH -C $WORKING_DIRECTORY .
+
+PUTASSET_PATH=$ROOT_DIRECTORY/node-putasset
+
+rm -rf $PUTASSET_PATH
+
+cd $ROOT_DIRECTORY && git clone https://github.com/garronej/node-putasset
+
+cd $PUTASSET_PATH && git checkout 4.0.2 && npm install --production
+
+DOWNLOAD_URL=$(cd / && PUTASSET_TOKEN=$PUTASSET_TOKEN node $PUTASSET_PATH/bin/putasset.js -r releases -o garronej -t asterisk -f "$TARBALL_FILE_PATH")
+
+rm -rf $PUTASSET_PATH $TARBALL_FILE_PATH
+
+COMMAND=$(cat <<EOF
+(function(){
+
+        const path= require("path");
+
+        const releases_file_path= path.join("$ROOT_DIRECTORY", "docs", "releases.json");
+
+        require("fs").writeFileSync(
+            releases_file_path,
+            JSON.stringify({
+              ...require(releases_file_path),
+              [ path.basename("$TARBALL_FILE_PATH") ]: "$DOWNLOAD_URL"
+            } ,null, 2)
+        );
+
+})();
+EOF
+)
+
+node -e "${COMMAND}"
 
 echo "DONE"
 

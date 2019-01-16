@@ -11,6 +11,8 @@ It is the version of asterisk bundled with Semasim.
 
 ### Prepare host
 
+* PUTASSET_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx need to be defined.
+  It must be github oAuth token that let upload release asset file to garrone/assets.
 * Need to be compiled on debian jessie.  
 * gcc-4.9 need to be installed ( apt-get install )  
   Be sure that gcc is as simlink to gcc-4.9
