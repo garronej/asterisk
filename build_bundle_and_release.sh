@@ -91,9 +91,11 @@ rm -rf $PUTASSET_PATH
 
 cd $ROOT_DIRECTORY && git clone https://github.com/garronej/node-putasset
 
-cd $PUTASSET_PATH && git checkout 4.0.2 && npm install --production
+cd $PUTASSET_PATH && git checkout 4.1.0 && npm install --production
 
-DOWNLOAD_URL=$(cd / && PUTASSET_TOKEN=$PUTASSET_TOKEN node $PUTASSET_PATH/bin/putasset.js -r releases -o garronej -t asterisk -f "$TARBALL_FILE_PATH")
+echo "Start uploading..."
+
+DOWNLOAD_URL=$( node $PUTASSET_PATH/bin/putasset.js -k $PUTASSET_TOKEN -r releases -o garronej -t asterisk -f "$TARBALL_FILE_PATH" --force)
 
 rm -rf $PUTASSET_PATH $TARBALL_FILE_PATH
 
