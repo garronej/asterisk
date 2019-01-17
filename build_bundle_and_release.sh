@@ -10,6 +10,12 @@ if [[ -z "${PUTASSET_TOKEN}" ]]; then
     exit 1
 fi
 
+if ! [ -x "$(command -v node)" ]; then
+  	echo 'Error: node is not installed.' >&2
+  	exit 1
+fi
+
+
 ROOT_DIRECTORY=$(pwd)
 WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
 AST_INSTALL_PATH=/usr/share/asterisk_semasim

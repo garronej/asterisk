@@ -11,6 +11,7 @@ It is the version of asterisk bundled with Semasim.
 
 ### Prepare host
 
+* node must be installed.
 * PUTASSET_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx need to be defined.
   It must be github oAuth token that let upload release asset file to garrone/assets.
 * Need to be compiled on debian jessie.  
