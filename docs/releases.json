@@ -1,3 +1,4 @@
 {
-  "asterisk_i686.tar.gz": "https://github.com/garronej/releases/releases/download/asterisk/asterisk_i686.tar.gz"
+  "asterisk_i686.tar.gz": "https://github.com/garronej/releases/releases/download/asterisk/asterisk_i686.tar.gz",
+  "asterisk_x86_64.tar.gz": "https://github.com/garronej/releases/releases/download/asterisk/asterisk_x86_64.tar.gz"
 }
