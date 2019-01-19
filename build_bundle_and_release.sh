@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ROOT_DIRECTORY=$(pwd)
+WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
+AST_INSTALL_PATH=/usr/share/asterisk_semasim
+
 if [[ $EUID -ne 0 ]]; then
     echo "This script require root privileges."
     exit 1
@@ -11,14 +15,22 @@ if [[ -z "${PUTASSET_TOKEN}" ]]; then
 fi
 
 if ! [ -x "$(command -v node)" ]; then
-  	echo 'Error: node is not installed.' >&2
+  	echo "Error: node is not installed"
   	exit 1
 fi
 
+if [ -d "$AST_INSTALL_PATH" ]; then
+    echo "$AST_INSTALL_PATH cannot exsist, (uninstall semasim)"
+    exit 1
+fi
 
-ROOT_DIRECTORY=$(pwd)
-WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
-AST_INSTALL_PATH=/usr/share/asterisk_semasim
+gcc -dumpversion | grep 4.9
+
+if [ $? -ne 0 ]; then
+  	echo "Error: gcc should point to gcc-4.9"
+  	exit 1
+fi
+
 
 rm -rf $WORKING_DIRECTORY && mkdir $WORKING_DIRECTORY
 
@@ -116,7 +128,7 @@ COMMAND=$(cat <<EOF
             releases_file_path,
             JSON.stringify({
               ...require(releases_file_path),
-              [ path.basename("$TARBALL_FILE_PATH") ]: "$DOWNLOAD_URL"
+              [ "$(uname -m)" ]: "$DOWNLOAD_URL"
             } ,null, 2)
         );
 
