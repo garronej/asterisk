@@ -4,6 +4,11 @@ ROOT_DIRECTORY=$(pwd)
 WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
 AST_INSTALL_PATH=/usr/share/asterisk_semasim
 
+if [[ $(cat /etc/debian_version) != "8.0" ]]; then
+    echo "Must be run on Debian Jessie"
+    exit 1
+fi
+
 if [[ $EUID -ne 0 ]]; then
     echo "This script require root privileges."
     exit 1
