@@ -4,7 +4,7 @@ ROOT_DIRECTORY=$(pwd)
 WORKING_DIRECTORY=$ROOT_DIRECTORY/working_directory
 AST_INSTALL_PATH=/usr/share/asterisk_semasim
 
-if [[ $(cat /etc/debian_version) != "8.0" ]]; then
+if ! cat /etc/debian_version | grep -e '^8\.'; then
     echo "Must be run on Debian Jessie"
     exit 1
 fi
