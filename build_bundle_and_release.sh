@@ -120,28 +120,26 @@ echo "Start uploading..."
 
 DOWNLOAD_URL=$(node $PUTASSET_PATH/bin/putasset.js -k $PUTASSET_TOKEN -r releases -o garronej -t asterisk -f "$TARBALL_FILE_PATH" --force)
 
-RELEASES_INDEX=$(wget -qO- https://github.com/garronej/releases/releases/download/asterisk/index.json)
-
 RELEASES_INDEX_FILE_PATH=$ROOT_DIRECTORY/index.json
+
+wget -qO- https://github.com/garronej/releases/releases/download/asterisk/index.json > $RELEASES_INDEX_FILE_PATH
 
 COMMAND=$(cat <<EOF
 (function(){
-
         require("fs").writeFileSync(
             "$RELEASES_INDEX_FILE_PATH",
             JSON.stringify({
-              ...JSON.parse("$RELEASES_INDEX"),
+              ...require("$RELEASES_INDEX_FILE_PATH"),
               [ "$(uname -m)" ]: "$DOWNLOAD_URL"
             } ,null, 2)
         );
-
 })();
 EOF
 )
 
 node -e "${COMMAND}"
 
-DOWNLOAD_URL=$(node $PUTASSET_PATH/bin/putasset.js -k $PUTASSET_TOKEN -r releases -o garronej -t asterisk -f "$RELEASES_INDEX_FILE_PATH" --force)
+node $PUTASSET_PATH/bin/putasset.js -k $PUTASSET_TOKEN -r releases -o garronej -t asterisk -f "$RELEASES_INDEX_FILE_PATH" --force
 
 rm -rf $PUTASSET_PATH $TARBALL_FILE_PATH $RELEASES_INDEX_FILE_PATH
 
