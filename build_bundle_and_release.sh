@@ -41,8 +41,7 @@ rm -rf $WORKING_DIRECTORY && mkdir $WORKING_DIRECTORY
 
 function build_speex(){
 
-    SRC_DIR=/tmp/$1
-    INST_DIR=$WORKING_DIRECTORY/$1
+    SRC_DIR=$WORKING_DIRECTORY/$1
 
     rm -rf $SRC_DIR
 
@@ -52,15 +51,13 @@ function build_speex(){
     
     ./autogen.sh
 
-    ./configure --prefix=$INST_DIR
+    mkdir -p $AST_INSTALL_PATH
 
-    mkdir $INST_DIR
+    ./configure --prefix=$AST_INSTALL_PATH
 
     make
 
     make install
-
-    cd $WORKING_DIRECTORY && rm -rf $SRC_DIR
 
 }
 
@@ -80,16 +77,17 @@ build_speex speex
 # libxml2-dev -> libxml2
 # libsqlite3-dev -> libsqlite3-0
 # unixodbc-dev -> unixodbc
-# libsrtp0-dev -> libsrtp0 
+# libsrtp0-dev -> NOTHIN ( libsrtp0  bundled )
 # libssl-dev -> NOTHING ( libssl1.0.0 bundled )
+# ( libncurses5-dev ? ) -> libtinfo5 ( don't quite understand why it's needed but it is, at least on Buster )
 apt-get install -y uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev libsrtp0-dev libssl-dev
 
 cd $ROOT_DIRECTORY
 
 ./configure \
         --with-pjproject-bundled \
-        --with-speex=$WORKING_DIRECTORY/speex \
-        --with-speexdsp=$WORKING_DIRECTORY/speexdsp \
+        --with-speex=$AST_INSTALL_PATH \
+        --with-speexdsp=$AST_INSTALL_PATH \
         --prefix=$AST_INSTALL_PATH
 
 make
@@ -100,11 +98,48 @@ mkdir $AST_INSTALL_PATH
 
 make install
 
+
+#Including problematic shared libraries
+
+LIBSSL_DEB_FILE_PATH=$WORKING_DIRECTORY/libssl.deb
+LIBSRTP_DEB_FILE_PATH=$WORKING_DIRECTORY/libsrtp.deb
+
+
+if [ "$(uname -m)" = "x86_64" ]; then
+        ARCH="amd64"
+elif [ "$(uname -m)" = "i686" ]; then
+        ARCH="i386"
+else
+        ARCH="armhf"
+if
+
+
+wget \
+        http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u11_"$ARCH".deb \
+        > $LIBSSL_DEB_FILE_PATH
+
+wget \
+        http://ftp.us.debian.org/debian/pool/main/s/srtp/libsrtp0_1.4.5~20130609~dfsg-1.1+deb8u1_"$ARCH".deb \
+        > $LIBSRTP_DEB_FILE_PATH
+
+
+LIBSSL_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/libssl
+LIBSRTP_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/libsrtp
+
+mkdir $LIBSSL_UNPACKED_DIR_PATH
+mkdir $LIBSRTP_UNPACKED_DIR_PATH
+
+dpkg-deb -R $LIBSSL_DEB_FILE_PATH $LIBSSL_UNPACKED_DIR_PATH
+dpkg-deb -R $LIBSRTP_DEB_FILE_PATH $LIBSRTP_UNPACKED_DIR_PATH
+
+rsync -a $LIBSSL_UNPACKED_DIR_PATH/usr/lib $AST_INSTALL_PATH/lib
+rsync -a $LIBSRTP_UNPACKED_DIR_PATH/usr/lib $AST_INSTALL_PATH/lib
+
 mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
 
-cp -p $(dpkg -L libssl1.0.0 | grep libssl.so.1.0.0) $(dpkg -L libssl1.0.0 | grep libcrypto.so.1.0.0) $WORKING_DIRECTORY/asterisk/lib/
 
-TARBALL_FILE_PATH=$ROOT_DIRECTORY/asterisk_$(uname -m).tar.gz
+
+TARBALL_FILE_PATH=$ROOT_DIRECTORY/asterisk_$(uname -m)_$(date +%s).tar.gz
 
 tar -czf $TARBALL_FILE_PATH -C $WORKING_DIRECTORY .
 
