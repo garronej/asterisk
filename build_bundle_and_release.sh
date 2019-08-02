@@ -41,7 +41,8 @@ rm -rf $WORKING_DIRECTORY && mkdir $WORKING_DIRECTORY
 
 function build_speex(){
 
-    SRC_DIR=$WORKING_DIRECTORY/$1
+    #Cannot be in working_directory because... reasons
+    SRC_DIR=/tmp/$1
 
     rm -rf $SRC_DIR
 
@@ -92,9 +93,6 @@ cd $ROOT_DIRECTORY
 
 make
 
-rm -rf $AST_INSTALL_PATH
-
-mkdir $AST_INSTALL_PATH
 
 make install
 
@@ -111,14 +109,14 @@ elif [ "$(uname -m)" = "i686" ]; then
         ARCH="i386"
 else
         ARCH="armhf"
-if
+fi
 
 
-wget \
+wget -qO- \
         http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u11_"$ARCH".deb \
         > $LIBSSL_DEB_FILE_PATH
 
-wget \
+wget -qO- \
         http://ftp.us.debian.org/debian/pool/main/s/srtp/libsrtp0_1.4.5~20130609~dfsg-1.1+deb8u1_"$ARCH".deb \
         > $LIBSRTP_DEB_FILE_PATH
 
@@ -132,8 +130,8 @@ mkdir $LIBSRTP_UNPACKED_DIR_PATH
 dpkg-deb -R $LIBSSL_DEB_FILE_PATH $LIBSSL_UNPACKED_DIR_PATH
 dpkg-deb -R $LIBSRTP_DEB_FILE_PATH $LIBSRTP_UNPACKED_DIR_PATH
 
-rsync -a $LIBSSL_UNPACKED_DIR_PATH/usr/lib $AST_INSTALL_PATH/lib
-rsync -a $LIBSRTP_UNPACKED_DIR_PATH/usr/lib $AST_INSTALL_PATH/lib
+rsync -a $LIBSSL_UNPACKED_DIR_PATH/usr/lib/ $AST_INSTALL_PATH/lib/
+rsync -a $LIBSRTP_UNPACKED_DIR_PATH/usr/lib/ $AST_INSTALL_PATH/lib/
 
 mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
 
@@ -141,7 +139,7 @@ mv $AST_INSTALL_PATH $WORKING_DIRECTORY/asterisk
 
 TARBALL_FILE_PATH=$ROOT_DIRECTORY/asterisk_$(uname -m)_$(date +%s).tar.gz
 
-tar -czf $TARBALL_FILE_PATH -C $WORKING_DIRECTORY .
+tar -czf $TARBALL_FILE_PATH -C $WORKING_DIRECTORY/asterisk .
 
 PUTASSET_PATH=$ROOT_DIRECTORY/node-putasset
 
