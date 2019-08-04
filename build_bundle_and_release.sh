@@ -99,30 +99,16 @@ make install
 
 #Including problematic shared libraries
 
-LIBSSL_DEB_FILE_PATH=$WORKING_DIRECTORY/libssl.deb
-LIBSRTP_DEB_FILE_PATH=$WORKING_DIRECTORY/libsrtp.deb
+cd $WORKING_DIRECTORY
 
+apt-get download libssl1.0.0
+apt-get download libsrtp0
 
-if [ "$(uname -m)" = "x86_64" ]; then
-        ARCH="amd64"
-elif [ "$(uname -m)" = "i686" ]; then
-        ARCH="i386"
-else
-        ARCH="armhf"
-fi
+LIBSSL_DEB_FILE_PATH=$(readlink -f libssl1.0.0*.deb)
+LIBSRTP_DEB_FILE_PATH=$(readlink -f libsrtp0*.deb)
 
-
-wget -qO- \
-        http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u11_"$ARCH".deb \
-        > $LIBSSL_DEB_FILE_PATH
-
-wget -qO- \
-        http://ftp.us.debian.org/debian/pool/main/s/srtp/libsrtp0_1.4.5~20130609~dfsg-1.1+deb8u1_"$ARCH".deb \
-        > $LIBSRTP_DEB_FILE_PATH
-
-
-LIBSSL_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/libssl
-LIBSRTP_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/libsrtp
+LIBSSL_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/$(basename -s .deb $LIBSSL_DEB_FILE_PATH)
+LIBSRTP_UNPACKED_DIR_PATH=$WORKING_DIRECTORY/$(basename -s .deb $LIBSRTP_DEB_FILE_PATH)
 
 mkdir $LIBSSL_UNPACKED_DIR_PATH
 mkdir $LIBSRTP_UNPACKED_DIR_PATH
