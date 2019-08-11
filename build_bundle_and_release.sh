@@ -81,6 +81,7 @@ build_speex speex
 # libsrtp0-dev -> NOTHIN ( libsrtp0  bundled )
 # libssl-dev -> NOTHING ( libssl1.0.0 bundled )
 # ( libncurses5-dev ? ) -> libtinfo5 ( don't quite understand why it's needed but it is, at least on Buster )
+# ( libxslt1-dev ?? ) -> libxslt1.1 ( on armbian buster at least )
 apt-get install -y uuid-dev libjansson-dev libxml2-dev libsqlite3-dev unixodbc-dev libsrtp0-dev libssl-dev
 
 cd $ROOT_DIRECTORY
